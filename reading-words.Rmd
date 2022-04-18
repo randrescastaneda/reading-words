@@ -1,0 +1,46 @@
+---
+title: "Entrenamiento de Lectura"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    theme:
+      version: 4
+      bootswatch: litera
+    source_code: embed
+    vertical_layout: fill
+runtime: shiny
+---
+
+
+```{r setup, include=FALSE}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Load libraries   ---------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# library("here")
+library("data.table")
+library("glue")
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# set up   ---------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# functions   ---------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+```
+
+
+Column {data-width=400 .tabset .tabset-fade}
+-----------------------------------------------------------------------
+
+### Instructions
+Here we provide some instructions of how to use this tool. 
+
+### Settings
+
+Column {data-width=900}
+-----------------------------------------------------------------------
+
