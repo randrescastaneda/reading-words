@@ -1,5 +1,5 @@
 ---
-title: "Entrenamiento de Lectura"
+title: "Reading training"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -19,6 +19,7 @@ runtime: shiny
 # library("here")
 library("data.table")
 library("glue")
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # set up   ---------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
