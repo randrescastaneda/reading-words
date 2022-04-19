@@ -1,8 +1,11 @@
 library(lubridate)
 library(shiny)
 
+#Sources
+# https://www.orientacionandujar.es/wp-content/uploads/2019/05/Listado-de-s%C3%ADlabas-palabras-y-oraciones-de-todas-las-letras.pdf
 
 words <- c(letters, LETTERS)
+words <- c("Dios", "Jesús", "carro", "perro", "mamá", "hola", "chao", "usted", "tú", "él", "ella", "amor", "caro", "sí", "no", "ahora", "después", "cuando", "está", "esta", "soy", "es", "ya", "papá", "español")
 
 ui <- fluidPage(
   hr(),
