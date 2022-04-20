@@ -1,0 +1,13 @@
+name: reading-words
+title: reading-words
+username:
+account: randrescastaneda
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6121464
+bundleId: 5819993
+url: https://randrescastaneda.shinyapps.io/reading-words/
+when: 1650492179.02578
+lastSyncTime: 1650492179.02578
+asMultiple: FALSE
+asStatic: FALSE

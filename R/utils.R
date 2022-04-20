@@ -22,15 +22,16 @@ training_type <- function(lang) {
     }
   )
 
-  # Early returns ------
-  if (FALSE) {
-    return()
-  }
 
   # Computations -------
   url_tree <-
     "https://api.github.com/repos/randrescastaneda/reading-words/git/trees/main?recursive=true"
   req <- GET(url_tree)
+
+  # Early returns ------
+  if (req$status_code  != 200) {
+    return(character())
+  }
 
   stop_for_status(req)
 
@@ -62,7 +63,8 @@ training_type <- function(lang) {
 #' @export
 #'
 #' @examples
-training_type_file <- function(lang, tt) {
+training_type_file <- function(lang, tt,
+                               url_base) {
 
   # on.exit ------------
   on.exit({
@@ -76,19 +78,18 @@ training_type_file <- function(lang, tt) {
   )
 
   # Early returns ------
-  if (FALSE) {
-    return()
+  if (lang == "" || tt == "") {
+    return("")
   }
 
   # Computations -------
-
+  ttf      <- glue("{url_base}/{lang}/{tt}.csv") |>
+    fread()
 
   # Return -------------
-  return(invisible(TRUE))
+  return(invisible(ttf))
 
 }
 
 
 
-dd <- "https://github.com/randrescastaneda/reading-words/raw/main/statis/spanish/letras.csv"
-fread(dd)

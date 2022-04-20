@@ -5,7 +5,7 @@ output:
     orientation: columns
     theme:
       version: 4
-      bootswatch: litera
+      bootswatch: cosmo
     css: styles.css
     source_code: embed
     vertical_layout: fill
@@ -23,6 +23,7 @@ library("lubridate")
 library("glue")
 library("readr")
 
+url_base <- "https://github.com/randrescastaneda/reading-words/raw/main/static"
 source("R/utils.R")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -34,7 +35,7 @@ words <- c(letters, LETTERS)
 words <- c("Dios", "Jesús", "carro", "perro", "mamá", "hola", "chao", "usted", "tú", "él", "ella", "amor", "caro", "sí", "no", "ahora", "después", "cuando", "está", "esta", "soy", "es", "ya", "papá", "español")
 
 
-languages <- read_lines("static/languages")
+languages <- read_lines(glue("{url_base}/languages"))
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # functions   ---------
@@ -57,21 +58,21 @@ Sidebar {.sidebar  data-width=350}
   selectInput(
         "lang",
         label = "Select your language",
-        choices = languages,
+        choices = c(empty = "", languages),
         selected = "",
         multiple = FALSE
       )
   selectInput(
         "tt",
         label = "Training type",
-        choices = "",
+        choices = c(empty = ""),
         selected = "",
         multiple = FALSE
       )
   selectInput(
         "gr",
-        label = "Training groups",
-        choices = "",
+        label = "Training groups (empty for all groups)",
+        choices = c(empty = ""),
         selected = "",
         multiple = TRUE
       )
@@ -82,28 +83,48 @@ Sidebar {.sidebar  data-width=350}
 ```{r udpate-settings}
 
 # update training type based on language
+  tts <- reactive({
+    training_type(input$lang)
+  })
+
   observeEvent(input$lang, {
-    tts <- training_type(input$lang)
     
     updateSelectInput(
       session,
       "tt",
-      choices = c(tts, ""),
+      choices = c(empty = "", tts()),
       selected = ""
     )
   })
 
 # update training groups based on training type
+  ttf <- reactive({
+    if (input$lang == ""  | input$tt == "") {
+      ttf <- NULL
+    }  else {
+      ttf <- training_type_file(lang = input$lang, 
+                                tt   = input$tt, 
+                                url_base)
+    }
+    return(ttf)
+    
+  })
+  
   observeEvent(input$tt, {
+    
+    if(is.null(ttf())) {
+      groups <- c(empty = "")
+    } else {
+      groups <- c("all", ttf()[, unique(group)])
+    }
+    
       
-      tts <- training_type(input$lang)
-      
-      updateSelectInput(
-        session,
-        "tt",
-        choices = c(tts, ""),
-        selected = ""
-      )
+    updateSelectInput(
+      session,
+      "gr",
+      choices = groups,
+      selected = ""
+    )
   })
 
 
@@ -128,11 +149,6 @@ Column {data-width=900}
         timer(timer()-1)
         if(timer()<1)
         {
-          # active(FALSE)
-          # showModal(modalDialog(
-          #   title = "Important message",
-          #   "Countdown completed!"
-          # ))
 
           timer(input$seconds)
 
@@ -163,11 +179,22 @@ Column {data-width=900}
 
 
 ```{r word}
+words <- reactive({
+  if ("all"  %in% input$gr) {
+    dt <- copy(ttf())
+  } else {
+    dt <- ttf()[group  %in% input$gr]
+  }
+  
+  words <- dt[, to_read]
+  return(words)
+})
+
 textOutput('word')
 output$word <-   renderText({
     invalidateLater(input$seconds*1000)
     if(active()) {
-      sample(words, 1)
+      sample(words(), 1)
     }
   })
 
