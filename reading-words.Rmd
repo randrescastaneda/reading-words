@@ -45,19 +45,12 @@ Sidebar {.sidebar}
 ### Settings
 
 ```{r settings}
-actionButton('start','Start')
-
+  actionButton('start','Start')
   actionButton('stop','Stop')
   actionButton('reset','Reset')
   numericInput('seconds','Seconds:',value=5,min=0,max=99999,step=1)
-  textOutput('timeleft')
-  # tags$head(tags$style("#word{color: red;
-  #                                font-size: 120px;
-  #                                font-style: italic;
-  #                                text-align: center;
-  #                                }"
-  #                      )
-  #           )
+
+  
 
 ```
 
@@ -107,6 +100,7 @@ Column {data-width=900}
 
 ```{r timeleft}
 # Output the time left.
+  textOutput('timeleft')
   renderText({
     paste("Time left: ", seconds_to_period(timer()))
   })
