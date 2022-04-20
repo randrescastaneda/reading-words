@@ -21,6 +21,7 @@ runtime: shiny
 library("data.table")
 library("lubridate")
 library("glue")
+library("readr")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # set up   ---------
@@ -31,6 +32,7 @@ words <- c(letters, LETTERS)
 words <- c("Dios", "Jesús", "carro", "perro", "mamá", "hola", "chao", "usted", "tú", "él", "ella", "amor", "caro", "sí", "no", "ahora", "después", "cuando", "está", "esta", "soy", "es", "ya", "papá", "español")
 
 
+languages <- read_lines("static/languages")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # functions   ---------
@@ -49,10 +51,17 @@ Sidebar {.sidebar}
   actionButton('stop','Stop')
   actionButton('reset','Reset')
   numericInput('seconds','Seconds:',value=5,min=0,max=99999,step=1)
-
-  
-
+  hr()
+  selectInput(
+        "lang",
+        label = "Select yoru language",
+        choices = languages,
+        selected = "",
+        multiple = TRUE
+      )
 ```
+
+
 
 
 
