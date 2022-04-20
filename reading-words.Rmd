@@ -41,7 +41,7 @@ languages <- read_lines("static/languages")
 ```
 
 
-Sidebar {.sidebar} 
+Sidebar {.sidebar  data-width=350} 
 -----------------------------------------------------------------------
 
 ### Settings

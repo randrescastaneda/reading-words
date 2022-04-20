@@ -1,5 +1,9 @@
 
 #   ____________________________________________________________________________
+#   library                                                                 ####
+library(data.table)
+library(readr)
+#   ____________________________________________________________________________
 #   inputs                                                                  ####
 
 spec  <- c("gu", "qu", "gü")
@@ -16,9 +20,9 @@ ei    <- c("e", "i")
 ##  ............................................................................
 ##  Regular cases                                                           ####
 
-dt <-  expand.grid(v = aeiou, letra = initl,  stringsAsFactors = FALSE)
+dt <-  expand.grid(v = aeiou, group = initl,  stringsAsFactors = FALSE)
 setDT(dt)
-dt[, silaba := paste0(letra,v)
+dt[, to_read := paste0(group,v)
    ][, v := NULL
      ]
 
@@ -26,13 +30,14 @@ dt[, silaba := paste0(letra,v)
 ##  ............................................................................
 ##  Special cases                                                           ####
 
-ft <-  expand.grid(v = ei, letra = spec,  stringsAsFactors = FALSE)
+ft <-  expand.grid(v = ei, group = spec,  stringsAsFactors = FALSE)
 setDT(ft)
-ft[, silaba := paste0(letra,v)
+ft[, to_read := paste0(group,v)
    ][, v := NULL
      ]
 
 dt <- rbindlist(list(dt, ft), use.names = TRUE)
 
+fwrite(dt, "static/spanish/silabas.csv")
 
 
