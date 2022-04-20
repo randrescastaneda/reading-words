@@ -6,6 +6,7 @@ output:
     theme:
       version: 4
       bootswatch: litera
+    css: styles.css
     source_code: embed
     vertical_layout: fill
 runtime: shiny
@@ -18,12 +19,16 @@ runtime: shiny
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # library("here")
 library("data.table")
+library("lubridate")
 library("glue")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # set up   ---------
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+words <- c(letters, LETTERS)
+words <- c("Dios", "Jesús", "carro", "perro", "mamá", "hola", "chao", "usted", "tú", "él", "ella", "amor", "caro", "sí", "no", "ahora", "después", "cuando", "está", "esta", "soy", "es", "ya", "papá", "español")
 
 
 
@@ -34,14 +39,88 @@ library("glue")
 ```
 
 
-Column {data-width=400 .tabset .tabset-fade}
+Sidebar {.sidebar} 
 -----------------------------------------------------------------------
 
-### Instructions
-Here we provide some instructions of how to use this tool. 
-
 ### Settings
+
+```{r settings}
+actionButton('start','Start')
+
+  actionButton('stop','Stop')
+  actionButton('reset','Reset')
+  numericInput('seconds','Seconds:',value=5,min=0,max=99999,step=1)
+  textOutput('timeleft')
+  # tags$head(tags$style("#word{color: red;
+  #                                font-size: 120px;
+  #                                font-style: italic;
+  #                                text-align: center;
+  #                                }"
+  #                      )
+  #           )
+
+```
+
+
 
 Column {data-width=900}
 -----------------------------------------------------------------------
 
+
+```{r}
+  # Initialize the timer, 5 seconds, not active.
+  timer <- reactiveVal(5)
+  active <- reactiveVal(FALSE)
+
+  # observer that invalidates every second. If timer is active, decrease by one.
+  observe({
+    invalidateLater(1000, session)
+    isolate({
+      if(active()) {
+
+        timer(timer()-1)
+        if(timer()<1)
+        {
+          # active(FALSE)
+          # showModal(modalDialog(
+          #   title = "Important message",
+          #   "Countdown completed!"
+          # ))
+
+          timer(input$seconds)
+
+        }
+      }
+    })
+  })
+
+  # observers for actionbuttons
+  observeEvent(input$start, {
+    timer(input$seconds)
+    active(TRUE)
+    })
+  observeEvent(input$stop, {active(FALSE)})
+  observeEvent(input$reset, {timer(input$seconds)})
+
+```
+
+
+```{r timeleft}
+# Output the time left.
+  renderText({
+    paste("Time left: ", seconds_to_period(timer()))
+  })
+  
+```
+
+
+```{r word}
+textOutput('word')
+output$word <-   renderText({
+    invalidateLater(input$seconds*1000)
+    if(active()) {
+      sample(words, 1)
+    }
+  })
+
+```
