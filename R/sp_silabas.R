@@ -38,6 +38,12 @@ ft[, to_read := paste0(group,v)
 
 dt <- rbindlist(list(dt, ft), use.names = TRUE)
 
+
+dt[, c("group", "to_read") :=
+     lapply(.SD, parse_character, locale = locale(encoding = "latin1")),
+   .SDcols = c("group", "to_read")]
+
+
 fwrite(dt, "static/spanish/silabas.csv")
 
 
