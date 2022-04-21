@@ -3,12 +3,18 @@ title: "Reading training"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
+    social: menu
     theme:
       version: 4
-      bootswatch: cosmo
+      bootswatch: minty
+      primary: "#F3969A"
+      secondary: "#78C2AD"
+      # font_scale: ""
     css: styles.css
     source_code: embed
     vertical_layout: fill
+    navbar:
+      - { title: "Github repo", href: "https://github.com/randrescastaneda/reading-words/", align: left }
 runtime: shiny
 ---
 
@@ -25,6 +31,8 @@ library("readr")
 
 url_base <- "https://github.com/randrescastaneda/reading-words/raw/main/static"
 source("R/utils.R")
+
+# bslib::bs_themer()
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # set up   ---------
@@ -73,7 +81,7 @@ Sidebar {.sidebar  data-width=350}
       )
   selectInput(
         "gr",
-        label = "Training groups (empty for all groups)",
+        label = "Training groups",
         choices = c(empty = ""),
         selected = "",
         multiple = TRUE
