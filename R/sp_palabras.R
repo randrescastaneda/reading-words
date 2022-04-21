@@ -22,6 +22,9 @@ for (i in seq_along(n_groups)) {
 df$group <- group
 setDT(df)
 
+# remove one-letter words
+df <- df[nchar(to_read) != 1]
+
 fwrite(df, "static/spanish/palabras.csv")
 
 
