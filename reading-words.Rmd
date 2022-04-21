@@ -151,6 +151,7 @@ Column {data-width=900}
   s_timer <- reactiveVal(60)  # session timer
   timer   <- reactiveVal(5)   # reading timer
   active  <- reactiveVal(FALSE)
+  k       <- reactiveVal(1)
 
   # observer that invalidates every second. If timer is active, decrease by one.
   observe({
@@ -164,6 +165,7 @@ Column {data-width=900}
         
         if(timer()<1) {
           timer(input$seconds)
+          k(k() + 1)
         }
         
         # message if session time is up
@@ -217,15 +219,21 @@ words <- reactive({
   return(words)
 })
 
+
+
 textOutput('word')
-k <- 1
 output$word <-   renderText({
   invalidateLater(input$seconds*1000)
-  if(active() & k <=length(words())) {
-    words()[k]
-    k <- k + 1
-  } else {
-    active(FALSE)
+  if(active()) {
+    if (k() <=length(words())) {
+      words()[k()]
+    } else {
+      active(FALSE)
+      showModal(modalDialog(
+            title = "You're done!",
+            "Let's go for another session"
+          ))
+    }
   }
   })
 
