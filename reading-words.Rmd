@@ -62,8 +62,9 @@ Sidebar {.sidebar  data-width=350}
   actionButton('stop','Stop')
   actionButton('reset','Reset')
   sliderInput("lnth", "Session length (minutes):", 
-              min = .5, max = 5, step = .5, value = 1)
-  numericInput('seconds','Seconds:',value=5,min=0,max=99999,step=1)
+              min = .25, max = 5, step = .25, value = 1)
+  sliderInput("seconds", "Seconds per word", 
+              min = .25, max = 15, step = .25, value = 5)
   hr()
   selectInput(
         "lang",
@@ -217,11 +218,15 @@ words <- reactive({
 })
 
 textOutput('word')
+k <- 1
 output$word <-   renderText({
-    invalidateLater(input$seconds*1000)
-    if(active()) {
-      sample(words(), 1)
-    }
+  invalidateLater(input$seconds*1000)
+  if(active() & k <=length(words())) {
+    words()[k]
+    k <- k + 1
+  } else {
+    active(FALSE)
+  }
   })
 
 ```
