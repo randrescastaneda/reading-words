@@ -53,6 +53,8 @@ Sidebar {.sidebar  data-width=350}
   actionButton('start','Start')
   actionButton('stop','Stop')
   actionButton('reset','Reset')
+  sliderInput("lnth", "Session length (minutes):", 
+              min = .5, max = 5, step = .5, value = 1)
   numericInput('seconds','Seconds:',value=5,min=0,max=99999,step=1)
   hr()
   selectInput(
@@ -123,7 +125,7 @@ Sidebar {.sidebar  data-width=350}
       session,
       "gr",
       choices = groups,
-      selected = ""
+      selected = "all"
     )
   })
 
@@ -137,22 +139,34 @@ Column {data-width=900}
 
 ```{r}
   # Initialize the timer, 5 seconds, not active.
-  timer <- reactiveVal(5)
-  active <- reactiveVal(FALSE)
+  s_timer <- reactiveVal(60)  # session timer
+  timer   <- reactiveVal(5)   # reading timer
+  active  <- reactiveVal(FALSE)
 
   # observer that invalidates every second. If timer is active, decrease by one.
   observe({
     invalidateLater(1000, session)
     isolate({
+      # start counting down
       if(active()) {
 
         timer(timer()-1)
-        if(timer()<1)
-        {
-
+        s_timer(s_timer()-1)
+        
+        if(timer()<1) {
           timer(input$seconds)
-
         }
+        
+        # message if session time is up
+        if(s_timer()<1) {
+          active(FALSE)
+          showModal(modalDialog(
+            title = "Time's up!",
+            "Let's go for another session"
+          ))
+        }
+        
+        
       }
     })
   })
@@ -160,10 +174,14 @@ Column {data-width=900}
   # observers for actionbuttons
   observeEvent(input$start, {
     timer(input$seconds)
+    s_timer(input$lnth*60)
     active(TRUE)
     })
   observeEvent(input$stop, {active(FALSE)})
-  observeEvent(input$reset, {timer(input$seconds)})
+  observeEvent(input$reset, {
+    timer(input$seconds)
+    s_timer(input$lnth*60)
+    })
 
 ```
 
@@ -172,7 +190,7 @@ Column {data-width=900}
 # Output the time left.
   textOutput('timeleft')
   renderText({
-    paste("Time left: ", seconds_to_period(timer()))
+    paste("Time left: ", seconds_to_period(s_timer()))
   })
   
 ```

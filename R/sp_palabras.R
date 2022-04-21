@@ -3,7 +3,8 @@ url <- "https://corpus.rae.es/frec/5000_formas.TXT"
 df <- read_tsv(url,
                col_names = c("orden", "to_read", "freqa", "freqr"),
                skip = 1,
-               col_select = "to_read")
+               col_select = "to_read",
+               locale = locale(encoding = "latin1"))
 
 group    <- vector(mode = "character", length = nrow(df))
 n_groups <- c(100, 400, 1000, 1500, 2000)
