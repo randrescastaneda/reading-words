@@ -84,7 +84,7 @@ training_type_file <- function(lang, tt,
 
   # Computations -------
   ttf      <- glue("{url_base}/{lang}/{tt}.csv") |>
-    fread()
+    fread(encoding = 'UTF-8')
 
   # Return -------------
   return(invisible(ttf))

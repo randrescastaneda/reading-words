@@ -5,9 +5,9 @@ account: randrescastaneda
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 6121464
-bundleId: 5822284
+bundleId: 5822720
 url: https://randrescastaneda.shinyapps.io/reading-words/
-when: 1650548406.70402
-lastSyncTime: 1650548406.70402
+when: 1650554967.60972
+lastSyncTime: 1650554967.60972
 asMultiple: FALSE
 asStatic: FALSE
