@@ -62,8 +62,9 @@ Sidebar {.sidebar  data-width=350}
   actionButton('stop','Stop')
   actionButton('reset','Reset')
   sliderInput("lnth", "Session length (minutes):", 
-              min = .5, max = 5, step = .5, value = 1)
-  numericInput('seconds','Seconds:',value=5,min=0,max=99999,step=1)
+              min = .25, max = 5, step = .25, value = 1)
+  sliderInput("seconds", "Seconds per word", 
+              min = .25, max = 15, step = .25, value = 5)
   hr()
   selectInput(
         "lang",
@@ -86,6 +87,10 @@ Sidebar {.sidebar  data-width=350}
         selected = "",
         multiple = TRUE
       )
+  hr()
+  checkboxInput("rn", "Randomize")
+  sliderInput("cy", "Number of cycles", 
+              min = 1, max = 10, step = 1, value = 1)
 ```
 
 
@@ -150,6 +155,7 @@ Column {data-width=900}
   s_timer <- reactiveVal(60)  # session timer
   timer   <- reactiveVal(5)   # reading timer
   active  <- reactiveVal(FALSE)
+  k       <- reactiveVal(1)
 
   # observer that invalidates every second. If timer is active, decrease by one.
   observe({
@@ -163,6 +169,7 @@ Column {data-width=900}
         
         if(timer()<1) {
           timer(input$seconds)
+          k(k() + 1)
         }
         
         # message if session time is up
@@ -213,15 +220,34 @@ words <- reactive({
   }
   
   words <- dt[, to_read]
+  
+  # Randomize
+  if (input$rn) {
+    words <- sample(words)
+  }
+  # number os cucles
+  words <- rep(words, input$cy)
   return(words)
 })
 
+
+
 textOutput('word')
 output$word <-   renderText({
-    invalidateLater(input$seconds*1000)
-    if(active()) {
-      sample(words(), 1)
+  invalidateLater(input$seconds*1000)
+  if(active()) {
+    if (k() <=length(words())) {
+      #Display words
+      words()[k()]
+    } else {
+      # Deactivate and add message when cycle is done
+      active(FALSE)
+      showModal(modalDialog(
+            title = "You're done!",
+            "Let's go for another session"
+          ))
     }
+  }
   })
 
 ```
